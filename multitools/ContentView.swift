@@ -28,7 +28,7 @@ struct ContentView: View {
             }
             
             Button(action: {
-                result = "Translate text"
+                result = dispatcher.execute(.translateText)
             }){
                 Label("Translate text", systemImage: "character.book.closed")
             }

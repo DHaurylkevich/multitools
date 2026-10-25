@@ -7,4 +7,5 @@
 
 enum ToolAction {
     case screenCapture
+    case translateText
 }
