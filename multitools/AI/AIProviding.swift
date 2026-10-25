@@ -7,9 +7,9 @@
 
 import Foundation
 
-protocol AIProvider{
+protocol AIProviding{
     func generate(
         systemPromt: String,
         userPromp: String
-    ) async throws -> Stringž
+    ) async throws -> String
 }
