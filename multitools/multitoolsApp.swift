@@ -13,7 +13,13 @@ struct multitoolsApp: App {
     
     init(){
         let screen = ScreenService()
-        self.dispatcher = ActionDispatcher(screen: screen)
+        let aiProvider = OllamaProvider()
+        let textService = TextService(aiProvider: aiProvider)
+
+        self.dispatcher = ActionDispatcher(
+            screen: screen,
+            textService: textService
+        )
     }
     
     var body: some Scene {
