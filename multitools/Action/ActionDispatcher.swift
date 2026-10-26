@@ -22,6 +22,7 @@ struct ActionDispatcher {
         switch action {
         case .screenCapture:
             return screen.capture()
+            
         case .translateText:
             return "Text translate"
         }
@@ -29,5 +30,9 @@ struct ActionDispatcher {
     
     func translate(_ text: String, to language: TranslationLanguage) async throws ->String {
         try await textService.translate(text, to: language)
+    }
+    
+    func explain(_ text: String) async throws ->String {
+        try await textService.explain(text)
     }
 }
