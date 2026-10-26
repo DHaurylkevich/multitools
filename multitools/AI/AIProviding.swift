@@ -9,7 +9,7 @@ import Foundation
 
 protocol AIProviding{
     func generate(
-        systemPromt: String,
-        userPromp: String
+        systemPrompt: String,
+        userPrompt: String
     ) async throws -> String
 }

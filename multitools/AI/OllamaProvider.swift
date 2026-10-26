@@ -14,7 +14,7 @@ struct OllamaProvider: AIProviding {
     private let model = "gemma4:e2b-it-qat"
     
     
-    func generate(systemPromt: String, userPromp: String) async throws -> String {
+    func generate(systemPrompt: String, userPrompt: String) async throws -> String {
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
         request.setValue("application/json",forHTTPHeaderField: "Content-Type")
@@ -22,8 +22,8 @@ struct OllamaProvider: AIProviding {
         let body = ChatRequest(
             model: model,
             messages:[
-                ChatMessages(role: "system", content: systemPromt),
-                ChatMessages(role: "user", content: userPromp)
+                ChatMessages(role: "system", content: systemPrompt),
+                ChatMessages(role: "user", content: userPrompt)
             ],
             stream: false,
             think: false

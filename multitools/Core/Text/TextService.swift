@@ -15,16 +15,10 @@ struct TextService {
     }
     
     func translate(_ text: String, to language: TranslationLanguage) async throws -> String {
-        let trimmedText = text.trimmingCharacters(
-            in: .whitespacesAndNewlines
-        )
+        let trimmedText = try validatedText(text)
 
-        guard !trimmedText.isEmpty else {
-            throw TextServiceError.emptyText
-        }
-        
         return try await aiProvider.generate(
-            systemPromt: """
+            systemPrompt: """
             You are a precise and professional translation engine. 
             Your only task is to translate the provided text into \(language.rawValue).
 
@@ -34,9 +28,38 @@ struct TextService {
             4. Maintain the original formatting, line breaks, and punctuation as closely as possible.
             5. If the source text is already in English, return it exactly as it is without changes.
             """,
-            userPromp: trimmedText
+            userPrompt: trimmedText
         )
     }
+    
+    func explain(_ text: String) async throws -> String {
+        let trimmedText = try validatedText(text)
+
+        return try await aiProvider.generate(
+            systemPrompt: """
+            You are a helpful assistant.
+            Explain concepts clearly and accurately.
+            Adapt the depth of your explanation to the question.
+            Use examples when they help understanding.
+            If the question is ambiguous, ask for clarification.
+            Answer in the same language as the user's message.
+            """,
+            userPrompt: trimmedText
+        )
+    }
+    
+    private func validatedText(_ text: String) throws -> String {
+        let trimmedText = text.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmedText.isEmpty else {
+            throw TextServiceError.emptyText
+        }
+
+        return trimmedText
+    }
+
 }
 
 enum TextServiceError: LocalizedError {
