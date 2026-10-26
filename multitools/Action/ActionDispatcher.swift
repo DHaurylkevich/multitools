@@ -27,7 +27,7 @@ struct ActionDispatcher {
         }
     }
     
-    func translate(_ text: String) async throws ->String {
-        try await textService.translate(text)
+    func translate(_ text: String, to language: TranslationLanguage) async throws ->String {
+        try await textService.translate(text, to: language)
     }
 }

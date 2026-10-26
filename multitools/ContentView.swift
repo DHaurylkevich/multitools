@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var result = ""
     @State private var isTranslating = false
     @State private var errorMessage: String?
+    @State private var selectedLanguage: TranslationLanguage = .english
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16){
@@ -25,6 +26,13 @@ struct ContentView: View {
             TextEditor(text: $inputText)
                 .frame(height: 100)
                 .border(.secondary.opacity(0.3))
+            
+            Picker("Translate to", selection: $selectedLanguage) {
+                ForEach(TranslationLanguage.allCases) { language in
+                    Text(language.title)
+                        .tag(language)
+                }
+            }
             
             Button{
                 Task{await translateText()}
@@ -88,7 +96,7 @@ struct ContentView: View {
             }
 
             do {
-                result = try await dispatcher.translate(inputText)
+                result = try await dispatcher.translate(inputText, to: selectedLanguage)
             } catch {
                 errorMessage = "Translation failed: \(error.localizedDescription)"
             }
