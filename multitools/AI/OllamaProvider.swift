@@ -8,7 +8,7 @@ import Foundation
 
 struct OllamaProvider: AIProviding {
     private let endpoint = URL(
-        string: "http://localhost:11434/api/chat"
+        string: "http://127.0.0.1:11434/api/chat"
     )!
     
     private let model = "gemma4:e2b-it-qat"
@@ -25,10 +25,15 @@ struct OllamaProvider: AIProviding {
                 ChatMessages(role: "system", content: systemPromt),
                 ChatMessages(role: "user", content: userPromp)
             ],
-            stream: false
+            stream: false,
+            think: false
+
         )
         
         request.httpBody = try JSONEncoder().encode(body)
+        
+        print("Request URL:", request.url?.absoluteString ?? "nil")
+        print("Request method:", request.httpMethod ?? "nil")
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -53,6 +58,7 @@ private struct ChatRequest: Encodable {
     let model: String
     let messages: [ChatMessages]
     let stream: Bool
+    let think: Bool
 }
 
 private struct ChatMessages: Codable {
