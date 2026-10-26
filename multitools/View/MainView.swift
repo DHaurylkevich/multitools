@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    let dispatcher: ActionDispatcher
+    
     private enum Section: String, CaseIterable, Identifiable {
         case translate = "Translate"
         case askAI = "Ask AI"
@@ -42,7 +44,7 @@ struct MainView: View {
         } detail: {
             switch selectedSection {
             case .translate:
-                Text("Translate")
+                TranslateView(dispatcher: dispatcher)
             case .askAI:
                 Text("Ask AI")
             case .settings:
