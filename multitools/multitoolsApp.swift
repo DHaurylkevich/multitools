@@ -25,7 +25,7 @@ struct multitoolsApp: App {
     
     var body: some Scene {
         MenuBarExtra("multitools", systemImage: "circle.grid.2x2") {
-            ContentView(dispatcher: dispatcher)
+            MainView(dispatcher: dispatcher)
         }
         .menuBarExtraStyle(.window)
     }
