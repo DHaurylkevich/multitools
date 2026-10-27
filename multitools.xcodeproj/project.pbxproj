@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04C9FD6A308CBE81000A23F8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 04C9FD69308CBE78000A23F8 /* .gitignore */; };
+		04C9FDFD3090C539000A23F8 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 04C9FDFC3090C539000A23F8 /* HotKey */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C9FDFD3090C539000A23F8 /* HotKey in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 			);
 			name = multitools;
 			packageProductDependencies = (
+				04C9FDFC3090C539000A23F8 /* HotKey */,
 			);
 			productName = multitools;
 			productReference = 04948926308CBC2F002B11A5 /* multitools.app */;
@@ -570,6 +573,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04C9FDFC3090C539000A23F8 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04C9FDCB3090C35C000A23F8 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0494891E308CBC2F002B11A5 /* Project object */;
 }
