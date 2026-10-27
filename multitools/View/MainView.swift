@@ -46,7 +46,7 @@ struct MainView: View {
             case .translate:
                 TranslateView(dispatcher: dispatcher)
             case .askAI:
-                Text("Ask AI")
+                AskAIView(dispatcher: dispatcher)
             case .settings:
                 Text("Settings")
             case .none:
