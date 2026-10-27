@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct multitoolsApp: App {
     private var dispatcher: ActionDispatcher
+    private let hotKeyService = HotKeyService()
     
     init(){
         let screen = ScreenService()
