@@ -23,16 +23,16 @@ struct multitoolsApp: App {
             textService: textService
         )
         
-        let panelController = FloatingPanelController(
-            dispatcher: dispatcher
+        let floatingPanelControle = FloatingPanelController(
+//            dispatcher: dispatcher
         )
         
         self.dispatcher = dispatcher
-        self.floatingPanelControle = panelController
+        self.floatingPanelControle = floatingPanelControle
         
         self.hotKeyService = HotKeyService{
             Task{ @MainActor in
-                panelController.toggle()
+                floatingPanelControle.toggle()
             }
         }
     }
