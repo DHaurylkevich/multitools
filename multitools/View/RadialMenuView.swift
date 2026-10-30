@@ -7,39 +7,72 @@
 
 import SwiftUI
 
-enum RadialMenuAction {
-    case translate
-    case askAI
-}
-
 struct RadialMenuView: View {
+        
     let onSelect: (RadialMenuAction) -> Void
-
+    
+    private let tools: [MenuTool] = [
+        MenuTool(
+            id: "translate",
+            label: "Translate",
+            icon: "character.bubble",
+            color: .purple,
+            action: .translate
+        ),
+        MenuTool(
+            id: "askAI",
+            label: "Ask AI",
+            icon: "sparkles",
+            color: .blue,
+            action: .askAI
+        )
+    ]
+    
+    private let innerRadius: CGFloat = 0.4
+    private let outerRadius: CGFloat = 95
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Multitools")
-                .font(.headline)
-                .padding(.bottom, 4)
-
-            Button {
-                onSelect(.translate)
-            } label: {
-                Label("Translate", systemImage: "character.bubble")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        ZStack{
+            
+            ForEach(Array(tools.enumerated()), id: \.element.id) { index, tool in
+                
+                let segmentAngle = 360.0 / Double(tools.count)
+                
+                let startAngle = Double(index) * segmentAngle - 90
+                let endAngle = startAngle + segmentAngle
+                
+                let middleAngle = (startAngle + endAngle) / 2
+                
+                let middleRadius = outerRadius * (1 + innerRadius) / 2
+                
+                Button {
+                    onSelect(tool.action)
+                } label: {
+                    
+                    ZStack {
+                        
+                        DonutSegment(
+                            startAngle: .degrees(startAngle),
+                            endAngle: .degrees(endAngle),
+                            innerRadius: innerRadius
+                        )
+                        .fill(tool.color)
+                        
+                        Image(systemName: tool.icon)
+                            .font(.system(size: 20))
+                            .foregroundStyle(.white)
+                            .offset(
+                                x: middleRadius * cos(middleAngle * .pi / 180),
+                                y: middleRadius * sin(middleAngle * .pi / 180)
+                            )
+                    }
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
-
-            Button {
-                onSelect(.askAI)
-            } label: {
-                Label("Ask AI", systemImage: "sparkles")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
         }
-        .padding(16)
-        .frame(width: 220)
-        .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .frame(
+            width: outerRadius * 2,
+            height: outerRadius * 2
+        )
     }
 }
