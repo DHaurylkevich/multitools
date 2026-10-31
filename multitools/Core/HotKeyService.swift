@@ -12,7 +12,7 @@ final class HotKeyService {
     private let hotKey: HotKey
     
     init(onHotKey: @escaping () -> Void ){
-        hotKey = HotKey(key: .space, modifiers:[.control, .command])
+        hotKey = HotKey(key: .v, modifiers:[.control, .command])
         
         hotKey.keyDownHandler = onHotKey
     }

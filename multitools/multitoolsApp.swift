@@ -10,8 +10,9 @@ import SwiftUI
 @main
 struct multitoolsApp: App {
     private let dispatcher: ActionDispatcher
-    private let floatingPanelControle: FloatingPanelController
+    private let radialControle: RadialController
     private let hotKeyService: HotKeyService
+    
     
     init(){
         let screen = ScreenService()
@@ -23,16 +24,17 @@ struct multitoolsApp: App {
             textService: textService
         )
         
-        let floatingPanelControle = FloatingPanelController(
-//            dispatcher: dispatcher
+        let router = WindowRouter(dispatcher: dispatcher)
+        let radialControle = RadialController(
+            router: router
         )
         
         self.dispatcher = dispatcher
-        self.floatingPanelControle = floatingPanelControle
+        self.radialControle = radialControle
         
         self.hotKeyService = HotKeyService{
             Task{ @MainActor in
-                floatingPanelControle.toggle()
+                radialControle.toggle()
             }
         }
     }

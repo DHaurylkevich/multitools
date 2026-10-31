@@ -1,52 +1,42 @@
-//
-//  FloatingPanelController.swift
-//  multitools
-//
-//  Created by Mac on 27/10/2026.
-//
-
 import AppKit
 import SwiftUI
 
 @MainActor
-final class FloatingPanelController: NSObject, NSWindowDelegate {
-    private var panel: NSPanel?
-    
-    func toggle(){
+final class RadialController {
+
+    private let router: WindowRouter
+    private var panel: RadialPanel?
+
+    init(router: WindowRouter) {
+        self.router = router
+    }
+
+    func toggle() {
         if let panel, panel.isVisible {
             close(panel)
-        }else{
+        } else {
             show()
         }
     }
-    
-    func show() {
+
+    private func show() {
         let panel = makePanel()
+        positionNearCursor()
 
-        positionNearCursor(panel)
         NSApp.activate(ignoringOtherApps: true)
-
         panel.makeKeyAndOrderFront(nil)
     }
-    
-    func close(_ panel: NSPanel) {
+
+    private func close(_ panel: NSPanel) {
         panel.orderOut(nil)
     }
 
-    func windowDidResignKey(_ notification: Notification) {
-        guard let panel = notification.object as? NSPanel else {
-            return
-        }
-
-        close(panel)
-    }
-    
-    private func makePanel() -> NSPanel {
+    private func makePanel() -> RadialPanel {
         if let panel {
             return panel
         }
 
-        let panel = FloatingPanel(
+        let panel = RadialPanel(
             contentRect: NSRect(
                 x: 0,
                 y: 0,
@@ -64,25 +54,33 @@ final class FloatingPanelController: NSObject, NSWindowDelegate {
         panel.isOpaque = false
         panel.hasShadow = true
         panel.isReleasedWhenClosed = false
+        panel.hidesOnDeactivate = false
 
         panel.collectionBehavior = [
             .canJoinAllSpaces,
             .fullScreenAuxiliary
         ]
 
-        panel.delegate = self
-
         panel.contentView = NSHostingView(
-            rootView: RadialMenuView { action in
-                print("Selected action: \(action)")
+            rootView: RadialMenuView { [weak self] action in
+                guard let self else {
+                    return
+                }
+
+                self.close(panel)
+                self.router.open(action)
             }
         )
 
         self.panel = panel
         return panel
     }
-    
-    private func positionNearCursor(_ panel: NSPanel) {
+
+    private func positionNearCursor() {
+        guard let panel else {
+            return
+        }
+
         let cursor = NSEvent.mouseLocation
 
         let screen = NSScreen.screens.first {
@@ -95,7 +93,6 @@ final class FloatingPanelController: NSObject, NSWindowDelegate {
 
         let visibleFrame = screen.visibleFrame
         let panelSize = panel.frame.size
-
         let margin: CGFloat = 8
 
         let x = min(
@@ -108,8 +105,6 @@ final class FloatingPanelController: NSObject, NSWindowDelegate {
             visibleFrame.maxY - panelSize.height
         )
 
-        panel.setFrameOrigin(
-            NSPoint(x: x, y: y)
-        )
+        panel.setFrameOrigin(NSPoint(x: x, y: y))
     }
 }

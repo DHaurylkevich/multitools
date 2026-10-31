@@ -1,9 +1,3 @@
-//
-//  MenuTool.swift
-//  multitools
-//
-//  Created by Mac on 30/10/2026.
-//
 import SwiftUI
 
 struct MenuTool: Identifiable {
