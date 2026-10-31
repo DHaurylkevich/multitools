@@ -18,7 +18,7 @@ struct ActionDispatcher {
         self.textService = textService
     }
     
-    func execute(_ action: ToolAction) -> String{
+    func execute(_ action: MainMenuAction) -> String{
         switch action {
         case .screenCapture:
             return screen.capture()

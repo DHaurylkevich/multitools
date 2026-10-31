@@ -9,13 +9,11 @@ import Foundation
 import HotKey
 
 final class HotKeyService {
-    private let hotKey = HotKey(key: .space, modifiers:[.control, .command])
+    private let hotKey: HotKey
     
-    init(){
-        hotKey.keyDownHandler = {
-            print("It's work")
-        }
+    init(onHotKey: @escaping () -> Void ){
+        hotKey = HotKey(key: .v, modifiers:[.control, .command])
+        
+        hotKey.keyDownHandler = onHotKey
     }
 }
-
- 

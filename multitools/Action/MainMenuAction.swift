@@ -1,11 +1,11 @@
 //
-//  Tool.swift
+//  MainMenuAction.swift
 //  multitools
 //
 //  Created by Mac on 24/10/2026.
 //
 
-enum ToolAction {
+enum MainMenuAction {
     case screenCapture
     case translateText
 }
