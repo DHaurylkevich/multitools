@@ -1,10 +1,3 @@
-//
-//  TranslationLanguage.swift
-//  multitools
-//
-//  Created by Mac on 26/10/2026.
-//
-
 import Foundation
 
 enum TranslationLanguage: String, CaseIterable, Identifiable {

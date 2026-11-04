@@ -1,10 +1,3 @@
-//
-//  MainView.swift
-//  multitools
-//
-//  Created by Mac on 26/10/2026.
-//
-
 import SwiftUI
 
 struct MainView: View {
@@ -19,12 +12,9 @@ struct MainView: View {
 
         var icon: String {
             switch self {
-            case .translate:
-                return "translate"
-            case .askAI:
-                return "sparkles"
-            case .settings:
-                return "gearshape"
+            case .translate: return "translate"
+            case .askAI: return "sparkles"
+            case .settings: return "gearshape"
             }
         }
     }
@@ -42,16 +32,21 @@ struct MainView: View {
             }
             .navigationTitle("Multitools")
         } detail: {
-            switch selectedSection {
-            case .translate:
-                TranslateView(dispatcher: dispatcher)
-            case .askAI:
-                AskAIView(dispatcher: dispatcher)
-            case .settings:
-                Text("Settings")
-            case .none:
-                Text("Select a tool")
+            VStack(spacing: 16) {                
+                Divider()
+                
+                switch selectedSection {
+                case .translate:
+                    TranslateView(dispatcher: dispatcher)
+                case .askAI:
+                    AskAIView(dispatcher: dispatcher)
+                case .settings:
+                    Text("Settings")
+                case .none:
+                    Text("Select a tool")
+                }
             }
+            .padding()
         }
         .frame(minWidth: 600, minHeight: 400)
     }

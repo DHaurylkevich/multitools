@@ -1,10 +1,3 @@
-//
-//  AskAIView.swift
-//  multitools
-//
-//  Created by Mac on 26/10/2026.
-//
-
 import SwiftUI
 
 struct AskAIView: View {
