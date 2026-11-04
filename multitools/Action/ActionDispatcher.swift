@@ -1,17 +1,10 @@
-//
-//  ActionDispatcher.swift
-//  multitools
-//
-//  Created by Mac on 25/10/2026.
-//
-
 struct ActionDispatcher {
-    let screen: any ScreenCapturing
+    let screen: ScreenService
     let textService: TextService
     
     
     init(
-        screen: any ScreenCapturing,
+        screen: ScreenService,
         textService: TextService
     ) {
         self.screen = screen
@@ -21,7 +14,8 @@ struct ActionDispatcher {
     func execute(_ action: MainMenuAction) -> String{
         switch action {
         case .screenCapture:
-            return screen.capture()
+//            return screen.captureInteractive()
+            return "screenshoot"
             
         case .translateText:
             return "Text translate"
