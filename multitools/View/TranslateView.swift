@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 struct TranslateView: View {
-    let dispatcher: ActionDispatcher
+    let dispatcher: any ActionDispatching
 
     @State private var inputText: String
     @State private var result: String
@@ -14,10 +14,10 @@ struct TranslateView: View {
     private let autoTranslate: Bool
 
     init(
-        dispatcher: ActionDispatcher,
+        dispatcher: any ActionDispatching,
         initialText: String = "",
         initialResult: String = "",
-        initialLanguage: TranslationLanguage = .russian,
+        initialLanguage: TranslationLanguage = .default,
         autoTranslate: Bool = false
     ) {
         self.dispatcher = dispatcher
@@ -153,7 +153,6 @@ struct TranslateView: View {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                 self.result = res
             }
-            adjustWindowSize(expanded: true)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -169,15 +168,4 @@ struct TranslateView: View {
         }
     }
 
-    private func adjustWindowSize(expanded: Bool) {
-        guard let window = NSApp.keyWindow else { return }
-        var frame = window.frame
-        let targetHeight: CGFloat = expanded ? 500 : 260
-        let delta = targetHeight - frame.size.height
-        if abs(delta) > 10 {
-            frame.origin.y -= delta
-            frame.size.height = targetHeight
-            window.animator().setFrame(frame, display: true)
-        }
-    }
 }

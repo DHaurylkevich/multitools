@@ -13,7 +13,7 @@ struct RadialMenuView: View {
     private let outerRadius: CGFloat = 95
 
     init(
-        items: [RadialMenuItem] = RadialMenuItem.defaultMenu,
+        items: [RadialMenuItem],
         onClose: @escaping () -> Void = {},
         onSelectAction: @escaping (AppAction) -> Void
     ) {

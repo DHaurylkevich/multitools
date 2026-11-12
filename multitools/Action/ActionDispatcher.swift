@@ -2,7 +2,7 @@ import Foundation
 import AppKit
 
 @MainActor
-final class ActionDispatcher {
+final class ActionDispatcher: ActionDispatching {
     let screen: ScreenService
     let ocr: OCRService
     let textService: TextService
@@ -17,7 +17,7 @@ final class ActionDispatcher {
         self.textService = textService
     }
 
-    func translate(_ text: String, to language: TranslationLanguage = .english) async throws -> String {
+    func translate(_ text: String, to language: TranslationLanguage) async throws -> String {
         try await textService.translate(text, to: language)
     }
 
@@ -29,7 +29,7 @@ final class ActionDispatcher {
         try await textService.checkGrammar(text)
     }
 
-    func translateScreenshot(to language: TranslationLanguage = .english) async throws -> (recognizedText: String, translation: String) {
+    func translateScreenshot(to language: TranslationLanguage) async throws -> ScreenshotTranslation {
         let screenshot = try await screen.captureInteractive(hideApp: true, silent: true)
 
         let extractedText = try await ocr.extractText(from: screenshot)
@@ -39,20 +39,17 @@ final class ActionDispatcher {
         }
 
         let translatedText = try await textService.translate(extractedText, to: language)
-        return (extractedText, translatedText)
+        return ScreenshotTranslation(recognizedText: extractedText, translation: translatedText)
     }
 }
 
 enum DispatcherError: LocalizedError {
     case noTextFoundOnScreen
-    case noTextSelected
 
     var errorDescription: String? {
         switch self {
         case .noTextFoundOnScreen:
             return "На снимке экрана не обнаружен читаемый текст."
-        case .noTextSelected:
-            return "Не удалось получить выделенный текст. Выделите фрагмент перед вызовом."
         }
     }
 }

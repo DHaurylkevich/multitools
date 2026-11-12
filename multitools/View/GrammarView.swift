@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct GrammarView: View {
-    let dispatcher: ActionDispatcher
+    let dispatcher: any ActionDispatching
 
     @State private var inputText = "She dont knows how to wrote Swift code."
     @State private var correctedText: String? = nil

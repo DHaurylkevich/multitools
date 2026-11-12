@@ -1,26 +1,19 @@
 import SwiftUI
 
 struct MainView: View {
-    let dispatcher: ActionDispatcher
-    let router: WindowRouter
-
     private enum Section: String, CaseIterable, Identifiable {
-        case translate = "Translate"
-        case askAI = "Ask AI"
         case settings = "Settings"
 
         var id: Self { self }
 
         var icon: String {
             switch self {
-            case .translate: return "character.bubble" // "translate" не существует в SF Symbols!
-            case .askAI: return "sparkles"
             case .settings: return "gearshape"
             }
         }
     }
 
-    @State private var selectedSection: Section? = .translate
+    @State private var selectedSection: Section? = .settings
 
     var body: some View {
         NavigationSplitView {
@@ -32,10 +25,6 @@ struct MainView: View {
         } detail: {
             Group {
                 switch selectedSection {
-                case .translate:
-                    TranslateView(dispatcher: dispatcher)
-                case .askAI:
-                    AskAIView(dispatcher: dispatcher)
                 case .settings:
                     SettingsPlaceholderView()
                 case .none:
@@ -58,7 +47,7 @@ private struct SettingsPlaceholderView: View {
             Text("Settings")
                 .font(.title2)
                 .fontWeight(.medium)
-            Text("Горячая клавиша по умолчанию: ⌥ + F (Option + F)")
+            Text("Горячая клавиша по умолчанию: ⌥ + K (Option + K)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

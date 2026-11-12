@@ -2,11 +2,16 @@ import SwiftUI
 
 @MainActor
 final class RadialController {
-    private let router: WindowRouter
+    private let router: any ActionRouting
+    private let rootItems: [RadialMenuItem]
     private var panel: RadialPanel?
 
-    init(router: WindowRouter) {
+    init(
+        router: any ActionRouting,
+        rootItems: [RadialMenuItem] = RadialMenuBuilder.rootItems
+    ) {
         self.router = router
+        self.rootItems = rootItems
     }
 
     func toggle() {
@@ -19,6 +24,11 @@ final class RadialController {
 
     private func show() {
         let panel = makePanel()
+
+        // Новый hosting view на каждый показ: меню всегда открывается
+        // на корневом уровне, без состояния предыдущего вызова.
+        panel.contentView = makeContentView(for: panel)
+
         positionCenteredOnCursor()
 
         NSApp.activate(ignoringOtherApps: true)
@@ -50,8 +60,14 @@ final class RadialController {
         panel.hidesOnDeactivate = false
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
-        panel.contentView = NSHostingView(
+        self.panel = panel
+        return panel
+    }
+
+    private func makeContentView(for panel: RadialPanel) -> NSView {
+        NSHostingView(
             rootView: RadialMenuView(
+                items: rootItems,
                 onClose: { [weak self, weak panel] in
                     guard let self, let panel else { return }
                     self.close(panel)
@@ -64,9 +80,6 @@ final class RadialController {
                 }
             )
         )
-
-        self.panel = panel
-        return panel
     }
 
     private func positionCenteredOnCursor() {

@@ -4,11 +4,10 @@ struct ChatMessageItem: Identifiable, Equatable {
     let id = UUID()
     let isUser: Bool
     let text: String
-    let timestamp: Date = Date()
 }
 
 struct AskAIView: View {
-    let dispatcher: ActionDispatcher
+    let dispatcher: any ActionDispatching
 
     @State private var messages: [ChatMessageItem] = [
         ChatMessageItem(
@@ -18,7 +17,6 @@ struct AskAIView: View {
     ]
     @State private var inputText = ""
     @State private var isProcessing = false
-    @State private var errorMessage: String?
     @State private var copiedId: UUID? = nil
 
     var body: some View {

@@ -13,13 +13,13 @@ struct TextService {
         return try await aiProvider.generate(
             systemPrompt: """
             You are a precise, professional translation engine.
-            Your sole purpose is to translate the user text into (language.rawValue).
+            Your sole purpose is to translate the user text into \(language.rawValue).
 
             RULES:
             1. Output ONLY the direct translation.
             2. Do not include any explanations, greetings, comments, or quotes.
             3. Maintain the original formatting, line breaks, and punctuation as closely as possible.
-            4. If the source text is already in (language.rawValue), return it as is.
+            4. If the source text is already in \(language.rawValue), return it as is.
             """,
             userPrompt: trimmedText
         )

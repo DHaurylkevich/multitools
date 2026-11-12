@@ -2,8 +2,6 @@ import SwiftUI
 
 @main
 struct multitoolsApp: App {
-    private let dispatcher: ActionDispatcher
-    private let router: WindowRouter
     private let radialController: RadialController
     private let hotKeyService: HotKeyService
 
@@ -19,7 +17,12 @@ struct multitoolsApp: App {
             textService: textService
         )
 
-        let router = WindowRouter(dispatcher: dispatcher)
+        let windows = WindowCoordinator()
+        let router = ActionRouter(
+            dispatcher: dispatcher,
+            windows: windows,
+            alerts: ModalAlertPresenter()
+        )
         let radialController = RadialController(router: router)
 
         let hotKeyService = HotKeyService {
@@ -28,15 +31,13 @@ struct multitoolsApp: App {
             }
         }
 
-        self.dispatcher = dispatcher
-        self.router = router
         self.radialController = radialController
         self.hotKeyService = hotKeyService
     }
 
     var body: some Scene {
         MenuBarExtra("multitools", systemImage: "circle.grid.2x2") {
-            MainView(dispatcher: dispatcher, router: router)
+            MainView()
         }
         .menuBarExtraStyle(.window)
     }

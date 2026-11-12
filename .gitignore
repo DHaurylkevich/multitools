@@ -10,3 +10,5 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 
 *.log
+.swift-version
+.vscode

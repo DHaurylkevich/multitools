@@ -73,7 +73,7 @@ enum OllamaError: LocalizedError {
         case .invalidResponse:
             return "Неверный ответ от локального сервера Ollama."
         case .serverError(let code):
-            return "Ошибка Ollama сервера с кодом (code). Убедитесь, что модель загружена."
+            return "Ошибка Ollama сервера с кодом \(code). Убедитесь, что модель загружена."
         }
     }
 }
