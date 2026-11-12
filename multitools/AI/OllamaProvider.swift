@@ -1,71 +1,79 @@
 import Foundation
 
 struct OllamaProvider: AIProviding {
-    private let endpoint = URL(
-        string: "http://127.0.0.1:11434/api/chat"
-    )!
-    
-    private let model = "gemma4:e2b-it-qat"
-    
-    
+    private let endpoint: URL
+    private let model: String
+    private let session: URLSession
+
+    init(
+        endpoint: URL = URL(string: "http://127.0.0.1:11434/api/chat")!,
+        model: String = "gemma4:e2b-it-qat",
+        session: URLSession = .shared
+    ) {
+        self.endpoint = endpoint
+        self.model = model
+        self.session = session
+    }
+
     func generate(systemPrompt: String, userPrompt: String) async throws -> String {
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
-        request.setValue("application/json",forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 60.0
 
         let body = ChatRequest(
             model: model,
-            messages:[
-                ChatMessages(role: "system", content: systemPrompt),
-                ChatMessages(role: "user", content: userPrompt)
+            messages: [
+                ChatMessage(role: "system", content: systemPrompt),
+                ChatMessage(role: "user", content: userPrompt)
             ],
             stream: false,
             think: false
-
         )
-        
+
         request.httpBody = try JSONEncoder().encode(body)
-        
-        print("Request URL:", request.url?.absoluteString ?? "nil")
-        print("Request method:", request.httpMethod ?? "nil")
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
+
+        let (data, response) = try await session.data(for: request)
+
         guard let httpResponse = response as? HTTPURLResponse else {
             throw OllamaError.invalidResponse
         }
-        
+
         guard (200..<300).contains(httpResponse.statusCode) else {
             throw OllamaError.serverError(httpResponse.statusCode)
         }
 
-        let result = try JSONDecoder().decode(
-            ChatResponse.self,
-            from: data
-        )
-        
+        let result = try JSONDecoder().decode(ChatResponse.self, from: data)
         return result.message.content
     }
 }
 
 private struct ChatRequest: Encodable {
     let model: String
-    let messages: [ChatMessages]
+    let messages: [ChatMessage]
     let stream: Bool
     let think: Bool
 }
 
-private struct ChatMessages: Codable {
+private struct ChatMessage: Codable {
     let role: String
     let content: String
 }
 
 private struct ChatResponse: Decodable {
-    let message: ChatMessages
+    let message: ChatMessage
 }
 
-enum OllamaError: Error {
+enum OllamaError: LocalizedError {
     case invalidResponse
     case serverError(Int)
-}
 
+    var errorDescription: String? {
+        switch self {
+        case .invalidResponse:
+            return "Неверный ответ от локального сервера Ollama."
+        case .serverError(let code):
+            return "Ошибка Ollama сервера с кодом (code). Убедитесь, что модель загружена."
+        }
+    }
+}
