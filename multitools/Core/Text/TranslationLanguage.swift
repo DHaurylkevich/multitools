@@ -1,5 +1,3 @@
-import Foundation
-
 enum TranslationLanguage: String, CaseIterable, Identifiable {
     case english = "English"
     case polish = "Polish"
@@ -7,6 +5,5 @@ enum TranslationLanguage: String, CaseIterable, Identifiable {
     case german = "German"
 
     var id: String { rawValue }
-
     var title: String { rawValue }
 }

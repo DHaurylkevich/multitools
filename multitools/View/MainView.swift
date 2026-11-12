@@ -2,7 +2,8 @@ import SwiftUI
 
 struct MainView: View {
     let dispatcher: ActionDispatcher
-    
+    let router: WindowRouter
+
     private enum Section: String, CaseIterable, Identifiable {
         case translate = "Translate"
         case askAI = "Ask AI"
@@ -12,7 +13,7 @@ struct MainView: View {
 
         var icon: String {
             switch self {
-            case .translate: return "translate"
+            case .translate: return "character.bubble" // "translate" не существует в SF Symbols!
             case .askAI: return "sparkles"
             case .settings: return "gearshape"
             }
@@ -23,31 +24,44 @@ struct MainView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(
-                Section.allCases,
-                selection: $selectedSection
-            ) { section in
+            List(Section.allCases, selection: $selectedSection) { section in
                 Label(section.rawValue, systemImage: section.icon)
                     .tag(section)
             }
             .navigationTitle("Multitools")
         } detail: {
-            VStack(spacing: 16) {                
-                Divider()
-                
+            Group {
                 switch selectedSection {
                 case .translate:
                     TranslateView(dispatcher: dispatcher)
                 case .askAI:
                     AskAIView(dispatcher: dispatcher)
                 case .settings:
-                    Text("Settings")
+                    SettingsPlaceholderView()
                 case .none:
-                    Text("Select a tool")
+                    Text("Выберите инструмент из бокового меню")
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding()
         }
-        .frame(minWidth: 600, minHeight: 400)
+        .frame(minWidth: 620, minHeight: 440)
+    }
+}
+
+private struct SettingsPlaceholderView: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "gearshape")
+                .font(.system(size: 36))
+                .foregroundStyle(.secondary)
+            Text("Settings")
+                .font(.title2)
+                .fontWeight(.medium)
+            Text("Горячая клавиша по умолчанию: ⌥ + F (Option + F)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

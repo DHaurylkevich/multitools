@@ -1,7 +1,7 @@
 import AppKit
 
 @MainActor
-struct ScreenService {
+final class ScreenService {
     enum ScreenshotError: LocalizedError {
         case userCancelled
         case clipboardReadFailed
@@ -9,15 +9,14 @@ struct ScreenService {
         var errorDescription: String? {
             switch self {
             case .userCancelled:
-                return "Захват отменен пользователем"
+                return "Захват экрана отменен пользователем (нажат Esc)"
             case .clipboardReadFailed:
-                return "Не удалось прочитать изображение из буфера"
+                return "Не удалось прочитать изображение из буфера обмена"
             }
         }
     }
     
-    /// Захватывает область экрана напрямую в буфер обмена и возвращает NSImage
-    func captureInteractive(hideApp: Bool = true, silent: Bool = false) async throws -> NSImage {
+    func captureInteractive(hideApp: Bool = true, silent: Bool = true) async throws -> NSImage {
         if hideApp {
             NSApp.hide(nil)
             try await Task.sleep(nanoseconds: 200_000_000)
@@ -64,5 +63,4 @@ struct ScreenService {
         
         return image
     }
-
 }
