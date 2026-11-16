@@ -1,28 +1,25 @@
 import Foundation
 
 struct OllamaProvider: AIProviding {
-    private let endpoint: URL
-    private let model: String
+    private let configuration: OllamaConfiguration
     private let session: URLSession
 
     init(
-        endpoint: URL = URL(string: "http://127.0.0.1:11434/api/chat")!,
-        model: String = "gemma4:e2b-it-qat",
+        configuration: OllamaConfiguration = OllamaConfiguration(),
         session: URLSession = .shared
     ) {
-        self.endpoint = endpoint
-        self.model = model
+        self.configuration = configuration
         self.session = session
     }
 
     func generate(systemPrompt: String, userPrompt: String) async throws -> String {
-        var request = URLRequest(url: endpoint)
+        var request = URLRequest(url: configuration.endpoint)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 60.0
+        request.timeoutInterval = configuration.requestTimeout
 
         let body = ChatRequest(
-            model: model,
+            model: configuration.model,
             messages: [
                 ChatMessage(role: "system", content: systemPrompt),
                 ChatMessage(role: "user", content: userPrompt)

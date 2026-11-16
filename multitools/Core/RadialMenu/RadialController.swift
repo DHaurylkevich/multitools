@@ -25,8 +25,6 @@ final class RadialController {
     private func show() {
         let panel = makePanel()
 
-        // Новый hosting view на каждый показ: меню всегда открывается
-        // на корневом уровне, без состояния предыдущего вызова.
         panel.contentView = makeContentView(for: panel)
 
         positionCenteredOnCursor()
@@ -44,8 +42,9 @@ final class RadialController {
             return panel
         }
 
+        let panelSide = DesignTokens.RadialMenu.panelSide
         let panel = RadialPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: panelSide, height: panelSide),
             styleMask: [.borderless],
             backing: .buffered,
             defer: false
@@ -65,7 +64,7 @@ final class RadialController {
     }
 
     private func makeContentView(for panel: RadialPanel) -> NSView {
-        NSHostingView(
+        let hostingView = NSHostingView(
             rootView: RadialMenuView(
                 items: rootItems,
                 onClose: { [weak self, weak panel] in
@@ -74,12 +73,13 @@ final class RadialController {
                 },
                 onSelectAction: { [weak self, weak panel] action in
                     guard let self, let panel else { return }
-                    // Закрываем меню только при выборе действия
                     self.close(panel)
                     self.router.open(action)
                 }
             )
         )
+
+        return hostingView
     }
 
     private func positionCenteredOnCursor() {
@@ -91,7 +91,7 @@ final class RadialController {
 
         let visibleFrame = screen.visibleFrame
         let panelSize = panel.frame.size
-        let margin: CGFloat = 8
+        let margin = DesignTokens.RadialMenu.screenEdgeMargin
 
         let targetX = cursor.x - (panelSize.width / 2)
         let targetY = cursor.y - (panelSize.height / 2)

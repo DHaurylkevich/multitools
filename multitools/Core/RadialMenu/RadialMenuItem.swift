@@ -1,7 +1,5 @@
 import SwiftUI
 
-/// Презентационная модель сегмента радиального меню.
-/// Ничего не знает ни о действиях приложения, ни об окнах.
 struct RadialMenuItem: Identifiable {
     let id: String
     let title: String

@@ -96,7 +96,7 @@ struct AskAIView: View {
                     }
                     .padding(16)
                 }
-                .onChange(of: messages) { _ in
+                .onChange(of: messages) {
                     if let last = messages.last {
                         withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
                     }
@@ -129,7 +129,7 @@ struct AskAIView: View {
                             NSPasteboard.general.setString(msg.text, forType: .string)
                             copiedId = msg.id
                             Task {
-                                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                                try? await Task.sleep(for: DesignTokens.Feedback.copyConfirmation)
                                 copiedId = nil
                             }
                         } label: {
@@ -164,3 +164,23 @@ struct AskAIView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview("Ask AI") {
+    AskAIView(dispatcher: PreviewDispatcher())
+        .frame(
+            width: DesignTokens.ToolWindow.defaultSize.width,
+            height: DesignTokens.ToolWindow.defaultSize.height
+        )
+}
+
+// Перед отправкой введите вопрос — ответит заглушка `PreviewDispatcher`.
+#Preview("Ask AI — ошибка сервиса") {
+    AskAIView(dispatcher: PreviewDispatcher(failing: true))
+        .frame(
+            width: DesignTokens.ToolWindow.defaultSize.width,
+            height: DesignTokens.ToolWindow.defaultSize.height
+        )
+}
+#endif
+

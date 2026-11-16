@@ -1,10 +1,5 @@
 import Foundation
 
-/// Собирает дерево радиального меню из реестра действий.
-///
-/// Действие без группы попадает в корень, действие с группой — в подменю,
-/// которое создаётся при первом появлении этой группы. Порядок пунктов
-/// повторяет `AppAction.allCases`.
 enum RadialMenuBuilder {
     static var rootItems: [RadialMenuItem] {
         var items: [RadialMenuItem] = []

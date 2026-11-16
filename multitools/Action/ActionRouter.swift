@@ -1,16 +1,10 @@
 import SwiftUI
 
-/// Точка входа для запросов «открыть инструмент».
-/// Контроллеры зависят от протокола, а не от конкретного роутера.
 @MainActor
 protocol ActionRouting: AnyObject {
     func open(_ action: AppAction)
 }
 
-/// Таблица маршрутов: преобразует действие в окно инструмента.
-///
-/// Роутер не управляет окнами (`WindowCoordinator`) и не показывает ошибки
-/// (`AlertPresenting`) — он только связывает действие с экраном и сценарием.
 @MainActor
 final class ActionRouter: ActionRouting {
     private let dispatcher: any ActionDispatching
@@ -77,7 +71,7 @@ final class ActionRouter: ActionRouting {
         ToolWindow(
             id: action.id,
             title: action.windowTitle,
-            size: CGSize(width: 520, height: 560),
+            size: DesignTokens.ToolWindow.defaultSize,
             content: content,
             replaceExistingContent: replaceExistingContent
         )

@@ -54,3 +54,11 @@ private struct SettingsPlaceholderView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+#if DEBUG
+#Preview("Main window") {
+    MainView()
+        .frame(width: 620, height: 440)
+}
+#endif
+

@@ -1,14 +1,13 @@
 import AppKit
 import SwiftUI
 
-/// Описание окна инструмента, которое умеет показать `WindowPresenting`.
 struct ToolWindow {
     let id: String
     let title: String
     let size: CGSize
     let content: AnyView
     /// Заменить содержимое уже открытого окна (например, новым результатом).
-    var replaceExistingContent: Bool = false
+    var replaceExistingContent: Bool = true
 }
 
 @MainActor
@@ -17,8 +16,6 @@ protocol WindowPresenting: AnyObject {
     func close(id: String)
 }
 
-/// Единственное место, которое знает, как создавать, переиспользовать
-/// и закрывать окна инструментов. Ничего не знает о действиях и сервисах.
 @MainActor
 final class WindowCoordinator: WindowPresenting {
     private var windows: [String: NSWindow] = [:]

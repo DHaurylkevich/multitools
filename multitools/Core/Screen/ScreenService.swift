@@ -19,7 +19,7 @@ final class ScreenService {
     func captureInteractive(hideApp: Bool = true, silent: Bool = true) async throws -> NSImage {
         if hideApp {
             NSApp.hide(nil)
-            try await Task.sleep(nanoseconds: 200_000_000)
+            try await Task.sleep(for: DesignTokens.Timing.hideBeforeCapture)
         }
         
         defer {
@@ -32,6 +32,9 @@ final class ScreenService {
         let pasteboard = NSPasteboard.general
         let initialChangeCount = pasteboard.changeCount
         
+        // -i — интерактивный выбор области мышью,
+        // -c — сразу в буфер обмена, без файла на диске,
+        // -x — без звука затвора.
         var arguments = ["-i", "-c"]
         if silent {
             arguments.append("-x")

@@ -3,6 +3,13 @@ import AppKit
 @preconcurrency import Vision
 
 final class OCRService: Sendable {
+    /// Языки распознавания в порядке приоритета: русский текст встречается
+    /// чаще, английский нужен для кода и интерфейсов.
+    private static let recognitionLanguages = ["ru-RU", "en-US"]
+
+    /// Ревизия Vision-запроса. Revision 3 поддерживает кириллицу и даёт
+    /// заметно лучшее качество на скриншотах, чем более старые ревизии.
+    private static let textRecognitionRevision = VNRecognizeTextRequestRevision3
     
     enum OCRError: LocalizedError {
         case cgImageCreationFailed
@@ -27,9 +34,9 @@ final class OCRService: Sendable {
         
         return try await Task.detached(priority: .userInitiated) {
             let request = VNRecognizeTextRequest()
-            request.revision = VNRecognizeTextRequestRevision3
+            request.revision = Self.textRecognitionRevision
             request.recognitionLevel = .accurate
-            request.recognitionLanguages = ["ru-RU", "en-US"]
+            request.recognitionLanguages = Self.recognitionLanguages
             request.usesLanguageCorrection = true
             
             let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])

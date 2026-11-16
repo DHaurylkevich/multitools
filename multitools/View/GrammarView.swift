@@ -70,7 +70,7 @@ struct GrammarView: View {
                             NSPasteboard.general.setString(corrected, forType: .string)
                             isCopied = true
                             Task {
-                                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                                try? await Task.sleep(for: DesignTokens.Feedback.copyConfirmation)
                                 isCopied = false
                             }
                         } label: {
@@ -102,7 +102,7 @@ struct GrammarView: View {
         }
         .padding(20)
         .frame(minWidth: 460, minHeight: correctedText != nil ? 480 : 260)
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: correctedText != nil)
+        .animation(DesignTokens.Feedback.resultAnimation, value: correctedText != nil)
     }
 
     @MainActor
@@ -118,3 +118,22 @@ struct GrammarView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview("Grammar") {
+    GrammarView(dispatcher: PreviewDispatcher())
+        .frame(
+            width: DesignTokens.ToolWindow.defaultSize.width,
+            height: DesignTokens.ToolWindow.defaultSize.height
+        )
+}
+
+#Preview("Grammar — ошибка сервиса") {
+    GrammarView(dispatcher: PreviewDispatcher(failing: true))
+        .frame(
+            width: DesignTokens.ToolWindow.defaultSize.width,
+            height: DesignTokens.ToolWindow.defaultSize.height
+        )
+}
+#endif
+

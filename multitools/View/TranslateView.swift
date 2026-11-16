@@ -47,7 +47,7 @@ struct TranslateView: View {
                     }
                 }
                 .frame(width: 150)
-                .onChange(of: selectedLanguage) { _ in
+                .onChange(of: selectedLanguage) {
                     if !inputText.isEmpty {
                         Task { await translateText() }
                     }
@@ -134,7 +134,7 @@ struct TranslateView: View {
         }
         .padding(20)
         .frame(minWidth: 460, minHeight: hasResult ? 480 : 250)
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: hasResult)
+        .animation(DesignTokens.Feedback.resultAnimation, value: hasResult)
         .onAppear {
             if autoTranslate && !inputText.isEmpty && result.isEmpty {
                 Task { await translateText() }
@@ -150,7 +150,7 @@ struct TranslateView: View {
 
         do {
             let res = try await dispatcher.translate(inputText, to: selectedLanguage)
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            withAnimation(DesignTokens.Feedback.resultAnimation) {
                 self.result = res
             }
         } catch {
@@ -163,9 +163,46 @@ struct TranslateView: View {
         NSPasteboard.general.setString(text, forType: .string)
         isCopied = true
         Task {
-            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            try? await Task.sleep(for: DesignTokens.Feedback.copyConfirmation)
             isCopied = false
         }
     }
 
 }
+
+#if DEBUG
+// Превью работают на заглушке `PreviewDispatcher`: сеть и захват экрана
+// не нужны, поэтому Canvas обновляется без запуска приложения.
+#Preview("Translate — пустая форма") {
+    TranslateView(dispatcher: PreviewDispatcher())
+        .frame(
+            width: DesignTokens.ToolWindow.defaultSize.width,
+            height: DesignTokens.ToolWindow.defaultSize.height
+        )
+}
+
+#Preview("Translate — с результатом") {
+    TranslateView(
+        dispatcher: PreviewDispatcher(),
+        initialText: "Hello, world!",
+        initialResult: "Привет, мир!",
+        initialLanguage: .russian
+    )
+    .frame(
+        width: DesignTokens.ToolWindow.defaultSize.width,
+        height: DesignTokens.ToolWindow.defaultSize.height
+    )
+}
+
+#Preview("Translate — ошибка сервиса") {
+    TranslateView(
+        dispatcher: PreviewDispatcher(failing: true),
+        initialText: "Hello, world!"
+    )
+    .frame(
+        width: DesignTokens.ToolWindow.defaultSize.width,
+        height: DesignTokens.ToolWindow.defaultSize.height
+    )
+}
+#endif
+
