@@ -1,11 +1,11 @@
 import Foundation
 
 struct OllamaProvider: AIProviding {
-    private let configuration: OllamaConfiguration
+    private let configuration: OllamaConfig
     private let session: URLSession
 
     init(
-        configuration: OllamaConfiguration = OllamaConfiguration(),
+        configuration: OllamaConfig = OllamaConfig(),
         session: URLSession = .shared
     ) {
         self.configuration = configuration

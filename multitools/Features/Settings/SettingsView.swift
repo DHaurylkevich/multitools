@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MainView: View {
+struct SettingsView: View {
     private enum Section: String, CaseIterable, Identifiable {
         case settings = "Settings"
 
@@ -56,8 +56,8 @@ private struct SettingsPlaceholderView: View {
 }
 
 #if DEBUG
-#Preview("Main window") {
-    MainView()
+#Preview("Settings") {
+    SettingsView()
         .frame(width: 620, height: 440)
 }
 #endif

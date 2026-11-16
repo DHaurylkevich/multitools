@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 struct TranslateView: View {
-    let dispatcher: any ActionDispatching
+    let dispatcher: any ActionPerforming
 
     @State private var inputText: String
     @State private var result: String
@@ -14,17 +14,17 @@ struct TranslateView: View {
     private let autoTranslate: Bool
 
     init(
-        dispatcher: any ActionDispatching,
+        dispatcher: any ActionPerforming,
         initialText: String = "",
         initialResult: String = "",
-        initialLanguage: TranslationLanguage = .default,
-        autoTranslate: Bool = false
+        initialLanguage: TranslationLanguage = .default
     ) {
         self.dispatcher = dispatcher
         self._inputText = State(initialValue: initialText)
         self._result = State(initialValue: initialResult)
         self._selectedLanguage = State(initialValue: initialLanguage)
-        self.autoTranslate = autoTranslate || (!initialText.isEmpty && initialResult.isEmpty)
+        // Текст передан, но результата ещё нет — переводим сразу при появлении.
+        self.autoTranslate = !initialText.isEmpty && initialResult.isEmpty
     }
 
     private var hasResult: Bool {

@@ -2,17 +2,17 @@ import Foundation
 import AppKit
 
 @MainActor
-final class ActionDispatcher: ActionDispatching {
+final class ActionDispatcher: ActionPerforming {
     let screen: ScreenService
     let ocr: OCRService
     let textService: TextService
 
     init(
-        screen: ScreenService? = nil,
+        screen: ScreenService,
         ocr: OCRService = OCRService(),
         textService: TextService
     ) {
-        self.screen = screen ?? ScreenService()
+        self.screen = screen
         self.ocr = ocr
         self.textService = textService
     }
@@ -30,7 +30,7 @@ final class ActionDispatcher: ActionDispatching {
     }
 
     func translateScreenshot(to language: TranslationLanguage) async throws -> ScreenshotTranslation {
-        let screenshot = try await screen.captureInteractive(hideApp: true, silent: true)
+        let screenshot = try await screen.captureInteractive()
 
         let extractedText = try await ocr.extractText(from: screenshot)
 

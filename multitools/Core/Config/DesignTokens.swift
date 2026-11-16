@@ -10,16 +10,8 @@ enum DesignTokens {
 
         static let scaleEffectSegment: CGFloat = 1.025
         
-        static let innerRadius: CGFloat =
-            outerRadius * innerHoleRatio
-
-        static let innerHoleDiameter: CGFloat =
-            innerRadius * 2
-
-        static let centerButtonScale: CGFloat = 1
-
         static let centerButtonDiameter: CGFloat =
-            innerHoleDiameter * centerButtonScale
+            outerRadius * innerHoleRatio * 2
 
         static let shadowMargin: CGFloat = 20
 
@@ -29,21 +21,7 @@ enum DesignTokens {
         static let segmentGapAngle: Angle = .degrees(1.5)
         static let screenEdgeMargin: CGFloat = 8
 
-        static let segmentFillOpacity: Double = 0.88
-        static let segmentHoverFillOpacity: Double = 1.0
-
-        static let segmentBorderOpacity: Double = 0.25
-        static let segmentHoverBorderOpacity: Double = 0.9
-
-        static let segmentBorderWidth: CGFloat = 1
-        static let segmentHoverBorderWidth: CGFloat = 2
-
-        static let hoverScale: CGFloat = 1.05
-
         static let iconSize: CGFloat = 20
-        static let submenuBadgeSize: CGFloat = 8
-        static let submenuBadgeOpacity: Double = 0.85
-        static let labelSpacing: CGFloat = 2
 
         static let levelEntryScale: CGFloat = 0.82
         static let levelExitScale: CGFloat = 0.12

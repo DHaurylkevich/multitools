@@ -1,6 +1,6 @@
 import Foundation
 
-struct OllamaConfiguration {
+struct OllamaConfig {
     var endpoint: URL
 
     var model: String

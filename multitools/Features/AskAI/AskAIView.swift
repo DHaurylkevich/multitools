@@ -7,7 +7,7 @@ struct ChatMessageItem: Identifiable, Equatable {
 }
 
 struct AskAIView: View {
-    let dispatcher: any ActionDispatching
+    let dispatcher: any ActionPerforming
 
     @State private var messages: [ChatMessageItem] = [
         ChatMessageItem(

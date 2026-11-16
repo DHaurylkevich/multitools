@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct multitoolsApp: App {
+struct MultitoolsApp: App {
     private let radialController: RadialController
     private let hotKeyService: HotKeyService
 
@@ -37,7 +37,7 @@ struct multitoolsApp: App {
 
     var body: some Scene {
         MenuBarExtra("multitools", systemImage: "circle.grid.2x2") {
-            MainView()
+            SettingsView()
         }
         .menuBarExtraStyle(.window)
     }

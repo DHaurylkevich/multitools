@@ -1,19 +1,9 @@
 import AppKit
 import SwiftUI
 
-struct ToolWindow {
-    let id: String
-    let title: String
-    let size: CGSize
-    let content: AnyView
-    /// Заменить содержимое уже открытого окна (например, новым результатом).
-    var replaceExistingContent: Bool = true
-}
-
 @MainActor
 protocol WindowPresenting: AnyObject {
     func present(_ window: ToolWindow)
-    func close(id: String)
 }
 
 @MainActor
@@ -39,16 +29,13 @@ final class WindowCoordinator: WindowPresenting {
         window.makeKeyAndOrderFront(nil)
     }
 
-    func close(id: String) {
-        windows[id]?.close()
-    }
-
     private func makeWindow(_ toolWindow: ToolWindow) -> NSWindow {
         let window = NSWindow(
             contentViewController: NSHostingController(rootView: toolWindow.content)
         )
         window.title = toolWindow.title
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.isReleasedWhenClosed = false
         window.setContentSize(toolWindow.size)
         window.center()

@@ -7,12 +7,12 @@ protocol ActionRouting: AnyObject {
 
 @MainActor
 final class ActionRouter: ActionRouting {
-    private let dispatcher: any ActionDispatching
+    private let dispatcher: any ActionPerforming
     private let windows: any WindowPresenting
     private let alerts: any AlertPresenting
 
     init(
-        dispatcher: any ActionDispatching,
+        dispatcher: any ActionPerforming,
         windows: any WindowPresenting,
         alerts: any AlertPresenting
     ) {
@@ -53,6 +53,10 @@ final class ActionRouter: ActionRouting {
                         replaceExistingContent: true
                     )
                 )
+            } catch ScreenService.ScreenshotError.userCancelled {
+                // Пользователь сам отменил выбор области — это не ошибка.
+            } catch let error as ScreenService.ScreenshotError {
+                alerts.present(title: "Снимок экрана", message: error.localizedDescription)
             } catch {
                 alerts.present(title: "Ошибка распознавания", message: error.localizedDescription)
             }

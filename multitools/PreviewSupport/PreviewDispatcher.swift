@@ -8,7 +8,7 @@ import SwiftUI
 /// открывает захват экрана: возвращает предсказуемый текст через короткую
 /// паузу, чтобы в Canvas были видны состояния загрузки и результата.
 @MainActor
-final class PreviewDispatcher: ActionDispatching {
+final class PreviewDispatcher: ActionPerforming {
     /// Если `true`, методы бросают ошибку — так проверяются состояния
     /// с сообщением об ошибке.
     private let failing: Bool
