@@ -202,7 +202,6 @@ struct AskAIView: View {
         )
 }
 
-// Перед отправкой введите вопрос — ответит заглушка `PreviewDispatcher`.
 #Preview("Ask AI — ошибка сервиса") {
     AskAIView(explainer: PreviewDispatcher(failing: true))
         .frame(

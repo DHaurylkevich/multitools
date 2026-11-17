@@ -62,7 +62,6 @@ enum RadialColors {
 }
 
 private extension Color {
-    /// Цвет из строки `RRGGBB`: используется только палитрой радиального меню.
     init(hex: String) {
         let value = UInt64(hex, radix: 16) ?? 0
 

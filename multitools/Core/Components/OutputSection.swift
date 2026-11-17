@@ -5,7 +5,6 @@ private enum ResultLayout {
     static let spacing: CGFloat = 10
 }
 
-/// Результат действия: разделитель, текст и кнопка копирования.
 struct OutputSection: View {
     let text: String
 

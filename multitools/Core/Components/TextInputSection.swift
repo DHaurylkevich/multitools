@@ -41,7 +41,6 @@ struct TextInputSection: View {
                 .padding(.vertical, InputBarLayout.verticalTextPadding)
                 .focused($isFocused)
                 .onKeyPress(keys: [.return]) { press in
-                    // Enter отправляет, Shift+Enter оставляет перенос строки.
                     guard !press.modifiers.contains(.shift) else { return .ignored }
                     handleSubmit()
                     return .handled

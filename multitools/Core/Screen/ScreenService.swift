@@ -2,8 +2,6 @@ import AppKit
 import ScreenCaptureKit
 
 enum ScreenCaptureDefaults {
-    /// Предел длинной стороны снимка в пикселях: OCR не нужен 5K-кадр,
-    /// а уменьшение кадра напрямую ускоряет Vision и разгружает устройство.
     static let maxPixelDimension: CGFloat = 2000
 }
 
@@ -66,7 +64,6 @@ final class ScreenService: ScreenCapturing {
         configuration.sourceRect = region.sourceRect
         configuration.width = outputSize.width
         configuration.height = outputSize.height
-        // Размеры сохраняют пропорции области, поэтому масштабирование не искажает кадр.
         configuration.scalesToFit = true
         configuration.showsCursor = false
 
@@ -86,8 +83,6 @@ final class ScreenService: ScreenCapturing {
         }
     }
 
-    /// Исключаем само приложение из снимка: рамка выделения закрывается прямо
-    /// перед захватом, и без исключения приходилось ждать, пока её уберёт композитор.
     private func excludingSelf(from content: SCShareableContent) -> [SCRunningApplication] {
         let processID = ProcessInfo.processInfo.processIdentifier
         return content.applications.filter { $0.processID == processID }

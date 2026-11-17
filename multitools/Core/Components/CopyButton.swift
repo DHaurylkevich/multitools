@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// Кнопка копирования текста с подтверждением через галочку.
 struct CopyButton: View {
     let text: String
     var help: String = "Copy"
