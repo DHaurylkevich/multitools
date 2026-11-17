@@ -8,8 +8,8 @@ struct SegmentView: View {
     let innerRadiusRatio: CGFloat
     let isHovered: Bool
     
-    private typealias Tokens = DesignTokens.RadialMenu
-    private typealias TokensColors = DesignTokens.RadialColors
+    private typealias Tokens = RadialMenuTokens
+    private typealias TokensColors = RadialColors
     
     let onTap: () -> Void
     let onHoverChange: (Bool) -> Void
@@ -50,8 +50,10 @@ struct SegmentView: View {
                     .overlay {
                         segmentShape
                             .stroke(
-                                Color.white.opacity(isHovered ? 0.95 : 0.7),
-                                lineWidth: isHovered ? 1.5 : 0.8
+                                Color.white.opacity(
+                                    isHovered ? Tokens.segmentHoverBorderOpacity : Tokens.segmentBorderOpacity
+                                ),
+                                lineWidth: isHovered ? Tokens.segmentHoverBorderWidth : Tokens.segmentBorderWidth
                             )
                     }
                     .scaleEffect(isHovered ? Tokens.scaleEffectSegment : 1)
@@ -59,7 +61,7 @@ struct SegmentView: View {
                 Image(systemName: item.icon)
                     .font(.system(size: Tokens.iconSize, weight: .medium))
                     .foregroundStyle(TokensColors.icon)
-                    .scaleEffect(isHovered ? 1.08 : 1)
+                    .scaleEffect(isHovered ? Tokens.iconHoverScale : 1)
                     .offset(
                     x: middleRadius * cos(middleAngle * .pi / 180),
                     y: middleRadius * sin(middleAngle * .pi / 180)
@@ -71,20 +73,6 @@ struct SegmentView: View {
             onHoverChange(hovering)
         }
         .contentShape(segmentShape)
-        .animation(.easeInOut(duration: 0.15), value: isHovered)
-    }
-}
-
-extension Color {
-    init(hex: String) {
-        let value = UInt64(hex, radix: 16) ?? 0
-
-        self.init(
-            .sRGB,
-            red: Double((value >> 16) & 0xFF) / 255,
-            green: Double((value >> 8) & 0xFF) / 255,
-            blue: Double(value & 0xFF) / 255,
-            opacity: 1
-        )
+        .animation(Tokens.hoverAnimation, value: isHovered)
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct TextService {
+struct TextService: Translating, Explaining, GrammarChecking {
     private let aiProvider: any AIProviding
 
     init(aiProvider: any AIProviding) {

@@ -7,7 +7,8 @@ struct CenterButton: View {
     
     @State private var isHovered = false
 
-    private typealias Tokens = DesignTokens.RadialMenu
+    private typealias Tokens = RadialMenuTokens
+    private typealias TokensColors = RadialColors
 
     private var iconName: String {
             isSubmenuActive ? "arrow.uturn.backward" : "xmark"
@@ -37,7 +38,7 @@ struct CenterButton: View {
             Button(action: onTap) {
                 ZStack {
                     Circle()
-                        .fill(Color(nsColor: .windowBackgroundColor))
+                        .fill(TokensColors.centerButtonFill)
                         .frame(width: diameter, height: diameter)
                         .overlay {
                             Circle()
@@ -55,7 +56,7 @@ struct CenterButton: View {
             }
             .buttonStyle(.plain)
             .onHover { hovering in
-                withAnimation(.easeOut(duration: 0.15)) {
+                withAnimation(Tokens.hoverAnimation) {
                     isHovered = hovering
                 }
             }

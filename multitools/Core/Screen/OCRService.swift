@@ -2,7 +2,7 @@ import CoreGraphics
 import Foundation
 @preconcurrency import Vision
 
-final class OCRService: Sendable {
+final class OCRService: TextRecognizing, Sendable {
     private static let recognitionLanguages = ["ru-RU", "en-US"]
 
     private static let textRecognitionRevision = VNRecognizeTextRequestRevision3
@@ -22,9 +22,11 @@ final class OCRService: Sendable {
         try await Task.detached(priority: .userInitiated) {
             let request = VNRecognizeTextRequest()
             request.revision = Self.textRecognitionRevision
-            request.recognitionLevel = .accurate
+            // `.fast` хватает для экранного текста, а работает он в разы быстрее
+            // `.accurate` при том же результате на чётком рендере.
+            request.recognitionLevel = .fast
             request.recognitionLanguages = Self.recognitionLanguages
-            request.usesLanguageCorrection = true
+            request.usesLanguageCorrection = false
 
             do {
                 try VNImageRequestHandler(cgImage: image, options: [:]).perform([request])

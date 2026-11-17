@@ -1,6 +1,6 @@
 import Foundation
 
-protocol AIProviding{
+protocol AIProviding {
     func generate(
         systemPrompt: String,
         userPrompt: String

@@ -42,7 +42,7 @@ final class RadialController {
             return panel
         }
 
-        let panelSide = DesignTokens.RadialMenu.panelSide
+        let panelSide = RadialMenuTokens.panelSide
         let panel = RadialPanel(
             contentRect: NSRect(x: 0, y: 0, width: panelSide, height: panelSide),
             styleMask: [.borderless],
@@ -91,7 +91,7 @@ final class RadialController {
 
         let visibleFrame = screen.visibleFrame
         let panelSize = panel.frame.size
-        let margin = DesignTokens.RadialMenu.screenEdgeMargin
+        let margin = RadialMenuTokens.screenEdgeMargin
 
         let targetX = cursor.x - (panelSize.width / 2)
         let targetY = cursor.y - (panelSize.height / 2)

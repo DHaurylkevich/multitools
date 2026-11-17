@@ -6,23 +6,22 @@ struct MultitoolsApp: App {
     private let hotKeyService: HotKeyService
 
     init() {
-        let screenService = ScreenService()
-        let ocrService = OCRService()
-        let aiProvider = OllamaProvider()
-        let textService = TextService(aiProvider: aiProvider)
+        let textService = TextService(aiProvider: OllamaProvider())
 
-        let dispatcher = ActionDispatcher(
-            screen: screenService,
-            ocr: ocrService,
-            textService: textService
-        )
-
-        let windows = WindowCoordinator()
         let router = ActionRouter(
-            dispatcher: dispatcher,
-            windows: windows,
-            alerts: ModalAlertPresenter()
+            views: FeatureViewFactory(
+                translator: textService,
+                explainer: textService,
+                grammarChecker: textService
+            ),
+            windows: WindowCoordinator(),
+            alerts: ModalAlertPresenter(),
+            screenshotReader: ScreenshotTextReader(
+                screen: ScreenService(),
+                ocr: OCRService()
+            )
         )
+
         let radialController = RadialController(router: router)
 
         let hotKeyService = HotKeyService {

@@ -8,7 +8,7 @@ struct RadialMenuView: View {
     @State private var navigationStack: [[RadialMenuItem]] = []
     @State private var hoveredItemId: String? = nil
     
-    private typealias Tokens = DesignTokens.RadialMenu
+    private typealias Tokens = RadialMenuTokens
     
     private let innerRadiusRatio = Tokens.innerHoleRatio
     private let outerRadius = Tokens.outerRadius
@@ -61,8 +61,8 @@ struct RadialMenuView: View {
                 .overlay {
                     Circle()
                         .strokeBorder(
-                            Color.white.opacity(0.8),
-                            lineWidth: 1
+                            Color.white.opacity(Tokens.ringBorderOpacity),
+                            lineWidth: Tokens.ringBorderWidth
                         )
                 }
             segmentsView
@@ -73,7 +73,7 @@ struct RadialMenuView: View {
             
             centerButton
         }
-        .padding(5)
+        .padding(Tokens.menuPadding)
         .frame(width: Tokens.menuDiameter, height: Tokens.menuDiameter)
         .animation(Tokens.navigationAnimation, value: navigationStack.count)
     }

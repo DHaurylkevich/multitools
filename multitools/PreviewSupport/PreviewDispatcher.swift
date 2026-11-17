@@ -2,13 +2,14 @@
 import Foundation
 import SwiftUI
 
-/// Заглушка фасада действий для SwiftUI-превью.
+/// Заглушка действий для SwiftUI-превью.
 ///
-/// В отличие от настоящего `ActionDispatcher` не ходит в Ollama и не
-/// открывает захват экрана: возвращает предсказуемый текст через короткую
-/// паузу, чтобы в Canvas были видны состояния загрузки и результата.
+/// В отличие от настоящих сервисов не ходит в Ollama и не открывает захват
+/// экрана: возвращает предсказуемый текст через короткую паузу, чтобы в Canvas
+/// были видны состояния загрузки и результата. Реализует только те роли,
+/// которые нужны экранам, — ни захват экрана, ни OCR превью не требуют.
 @MainActor
-final class PreviewDispatcher: ActionPerforming {
+final class PreviewDispatcher: Translating, Explaining, GrammarChecking {
     /// Если `true`, методы бросают ошибку — так проверяются состояния
     /// с сообщением об ошибке.
     private let failing: Bool
@@ -30,14 +31,6 @@ final class PreviewDispatcher: ActionPerforming {
     func checkGrammar(_ text: String) async throws -> String {
         try await simulateWork()
         return "She doesn't know how to write Swift code."
-    }
-
-    func translateScreenshot(to language: TranslationLanguage) async throws -> ScreenshotTranslation {
-        try await simulateWork()
-        return ScreenshotTranslation(
-            recognizedText: "Hello, world!",
-            translation: "Привет, мир! (\(language.title))"
-        )
     }
 
     private func simulateWork() async throws {

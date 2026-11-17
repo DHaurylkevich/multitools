@@ -1,5 +1,15 @@
 import AppKit
 
+private enum RegionOverlayStyle {
+    static let dimAlpha: CGFloat = 0.28
+    static let borderWidth: CGFloat = 1
+    static let minimumSelectionSide: CGFloat = 4
+}
+
+private enum KeyCode {
+    static let escape: UInt16 = 53
+}
+
 @MainActor
 final class RegionSelector {
     private var windows: [NSWindow] = []
@@ -84,7 +94,7 @@ private final class SelectionView: NSView {
     }
 
     override func keyDown(with event: NSEvent) {
-        if event.keyCode == 53 {
+        if event.keyCode == KeyCode.escape {
             onFinish(nil)
         } else {
             super.keyDown(with: event)
@@ -110,7 +120,10 @@ private final class SelectionView: NSView {
     override func mouseUp(with event: NSEvent) {
         currentPoint = convert(event.locationInWindow, from: nil)
 
-        guard let selection, selection.width >= 4, selection.height >= 4, let window else {
+        guard let selection,
+              selection.width >= RegionOverlayStyle.minimumSelectionSide,
+              selection.height >= RegionOverlayStyle.minimumSelectionSide,
+              let window else {
             onFinish(nil)
             return
         }
@@ -130,7 +143,7 @@ private final class SelectionView: NSView {
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        NSColor.black.withAlphaComponent(0.28).setFill()
+        NSColor.black.withAlphaComponent(RegionOverlayStyle.dimAlpha).setFill()
         dirtyRect.fill()
 
         guard let selection, selection.width > 0, selection.height > 0 else { return }
@@ -140,7 +153,7 @@ private final class SelectionView: NSView {
 
         NSColor.white.setStroke()
         let border = NSBezierPath(rect: selection)
-        border.lineWidth = 1
+        border.lineWidth = RegionOverlayStyle.borderWidth
         border.stroke()
     }
 }

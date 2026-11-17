@@ -4,7 +4,7 @@ struct DonutSegment: Shape {
     var startAngle: Angle
     var endAngle: Angle
     var innerRadiusRatio: CGFloat
-    var gapAngle: Angle = DesignTokens.RadialMenu.segmentGapAngle
+    var gapAngle: Angle = RadialMenuTokens.segmentGapAngle
 
     func path(in rect: CGRect) -> Path {
         let center = CGPoint(x: rect.midX, y: rect.midY)

@@ -3,7 +3,7 @@ import SwiftUI
 
 @MainActor
 protocol WindowPresenting: AnyObject {
-    func present(_ window: ToolWindow)
+    func present(_ window: ToolWindow, content: AnyView)
 }
 
 @MainActor
@@ -11,17 +11,17 @@ final class WindowCoordinator: WindowPresenting {
     private var windows: [String: NSWindow] = [:]
     private var closeObservers: [String: NSObjectProtocol] = [:]
 
-    func present(_ toolWindow: ToolWindow) {
+    func present(_ toolWindow: ToolWindow, content: AnyView) {
         if let existing = windows[toolWindow.id] {
             if toolWindow.replaceExistingContent {
-                existing.contentViewController = NSHostingController(rootView: toolWindow.content)
+                existing.contentViewController = NSHostingController(rootView: content)
             }
             NSApp.activate(ignoringOtherApps: true)
             existing.makeKeyAndOrderFront(nil)
             return
         }
 
-        let window = makeWindow(toolWindow)
+        let window = makeWindow(toolWindow, content: content)
         windows[toolWindow.id] = window
         observeClose(of: window, id: toolWindow.id)
 
@@ -29,9 +29,9 @@ final class WindowCoordinator: WindowPresenting {
         window.makeKeyAndOrderFront(nil)
     }
 
-    private func makeWindow(_ toolWindow: ToolWindow) -> NSWindow {
+    private func makeWindow(_ toolWindow: ToolWindow, content: AnyView) -> NSWindow {
         let window = NSWindow(
-            contentViewController: NSHostingController(rootView: toolWindow.content)
+            contentViewController: NSHostingController(rootView: content)
         )
         window.title = toolWindow.title
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]

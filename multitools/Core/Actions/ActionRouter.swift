@@ -7,76 +7,57 @@ protocol ActionRouting: AnyObject {
 
 @MainActor
 final class ActionRouter: ActionRouting {
-    private let dispatcher: any ActionPerforming
+    private let views: any FeatureViewMaking
     private let windows: any WindowPresenting
     private let alerts: any AlertPresenting
+    private let screenshotReader: any ScreenshotReading
 
     init(
-        dispatcher: any ActionPerforming,
+        views: any FeatureViewMaking,
         windows: any WindowPresenting,
-        alerts: any AlertPresenting
+        alerts: any AlertPresenting,
+        screenshotReader: any ScreenshotReading
     ) {
-        self.dispatcher = dispatcher
+        self.views = views
         self.windows = windows
         self.alerts = alerts
+        self.screenshotReader = screenshotReader
     }
 
     func open(_ action: AppAction) {
         switch action {
-        case .translateText:
-            windows.present(toolWindow(for: action, content: translateView()))
         case .translateScreenshot:
-            translateScreenshot()
-        case .askAI:
-            windows.present(toolWindow(for: action, content: AnyView(AskAIView(dispatcher: dispatcher))))
-        case .grammar:
-            windows.present(toolWindow(for: action, content: AnyView(GrammarView(dispatcher: dispatcher))))
+            openRecognizedScreenshotText()
+        case .translateText, .askAI, .grammar:
+            windows.present(window(for: action), content: views.view(for: action))
         }
     }
 
-    private func translateScreenshot() {
+    /// Показывает распознанный текст в окне перевода. Перевод запускает сам
+    /// пользователь, поэтому окно открывается сразу после OCR.
+    private func openRecognizedScreenshotText() {
         Task { [weak self] in
             guard let self else { return }
 
             do {
-                let result = try await dispatcher.translateScreenshot(to: .default)
+                let text = try await screenshotReader.readTextFromScreenshot()
                 windows.present(
-                    toolWindow(
-                        for: .translateText,
-                        content: AnyView(
-                            TranslateView(
-                                dispatcher: dispatcher,
-                                initialText: result.recognizedText,
-                                initialResult: result.translation
-                            )
-                        ),
-                        replaceExistingContent: true
-                    )
+                    window(for: .translateText, replaceExistingContent: true),
+                    content: views.translateView(initialText: text)
                 )
-            } catch ScreenService.ScreenshotError.userCancelled {
+            } catch ScreenshotTextError.cancelled {
                 // Пользователь сам отменил выбор области — это не ошибка.
-            } catch let error as ScreenService.ScreenshotError {
-                alerts.present(title: "Снимок экрана", message: error.localizedDescription)
             } catch {
-                alerts.present(title: "Ошибка распознавания", message: error.localizedDescription)
+                alerts.present(title: "Снимок экрана", message: error.localizedDescription)
             }
         }
     }
 
-    private func translateView() -> AnyView {
-        AnyView(TranslateView(dispatcher: dispatcher, initialLanguage: .default))
-    }
-
-    private func toolWindow(
-        for action: AppAction,
-        content: AnyView,
-        replaceExistingContent: Bool = false
-    ) -> ToolWindow {
+    private func window(for action: AppAction, replaceExistingContent: Bool = false) -> ToolWindow {
         ToolWindow(
             id: action.id,
             title: action.windowTitle,
-            size: DesignTokens.ToolWindow.defaultSize,
-            content: content,
+            size: ToolWindowTokens.defaultSize,
             replaceExistingContent: replaceExistingContent
         )
     }
