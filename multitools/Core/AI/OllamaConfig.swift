@@ -3,17 +3,18 @@ import Foundation
 struct OllamaConfig {
     var endpoint: URL
 
-    var model: String
+    /// `/api/generate` без промпта только загружает модель в память.
+    var preloadEndpoint: URL
 
     var requestTimeout: TimeInterval
 
     init(
         endpoint: URL = URL(string: "http://127.0.0.1:11434/api/chat")!,
-        model: String = "gemma4:e2b-it-qat",
+        preloadEndpoint: URL = URL(string: "http://127.0.0.1:11434/api/generate")!,
         requestTimeout: TimeInterval = 60
     ) {
         self.endpoint = endpoint
-        self.model = model
+        self.preloadEndpoint = preloadEndpoint
         self.requestTimeout = requestTimeout
     }
 }
