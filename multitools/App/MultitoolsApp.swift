@@ -6,7 +6,8 @@ struct MultitoolsApp: App {
     private let hotKeyService: HotKeyService
 
     init() {
-        let textService = TextService(aiProvider: OllamaProvider())
+        let aiProvider = OllamaProvider()
+        let textService = TextService(aiProvider: aiProvider)
 
         let router = ActionRouter(
             views: FeatureViewFactory(
@@ -25,6 +26,8 @@ struct MultitoolsApp: App {
         let radialController = RadialController(router: router)
 
         let hotKeyService = HotKeyService {
+            Task { await aiProvider.preload() }
+
             Task { @MainActor in
                 radialController.toggle()
             }

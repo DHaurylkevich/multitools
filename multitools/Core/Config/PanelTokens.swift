@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// Общие токены панелей инструментов: Grammar, Translate, AskAI.
 enum PanelTokens {
     static let width: CGFloat = 480
 

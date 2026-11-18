@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// Строка выбора языка перевода над полем ввода.
 struct LanguageBar: View {
     @Binding var language: TranslationLanguage
 

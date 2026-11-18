@@ -26,8 +26,6 @@ enum CaptureGeometry {
         return CGFloat(displayPixelWidth) / screenWidth
     }
 
-    /// Размер выходного кадра: пропорции сохраняются, длинная сторона не превышает `maxDimension`.
-    /// Небольшие области не апскейлятся.
     static func outputSize(pixelWidth: Int, pixelHeight: Int, maxDimension: CGFloat) -> CaptureSize {
         let longest = CGFloat(max(pixelWidth, pixelHeight))
         guard maxDimension > 0, longest > maxDimension else {

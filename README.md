@@ -13,10 +13,11 @@ multitools/
 ├── Core/                 общее ядро, не зависящее от конкретного экрана
 │   ├── Actions/          узкие роли действий (ActionPorts), ActionRouter, FeatureViewFactory,
 │   │                     ScreenshotTextReader
-│   ├── AI/               AIProviding + реализация Ollama
+│   ├── AI/               AIProviding, AISettings (модель, контекст, лимит ответа,
+│   │                     температура, выгрузка из памяти в UserDefaults), реализация Ollama
 │   ├── Components/       переиспользуемые SwiftUI-компоненты
 │   ├── Config/           токены оформления: RadialMenuTokens, ToolWindowTokens, FeedbackTokens,
-│   │                     PanelTokens, расширение Color(hex:), атрибуты действий (иконка/заголовок)
+│   │                     PanelTokens, атрибуты действий (иконка/заголовок)
 │   ├── Presentation/     алерты и описание окна инструмента
 │   ├── Screen/           порты ScreenCapturing/TextRecognizing, ScreenService, геометрия,
 │   │                     права на запись экрана, оверлей выделения, Vision OCR

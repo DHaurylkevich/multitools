@@ -33,8 +33,6 @@ final class ActionRouter: ActionRouting {
         }
     }
 
-    /// Показывает распознанный текст в окне перевода. Перевод запускает сам
-    /// пользователь, поэтому окно открывается сразу после OCR.
     private func openRecognizedScreenshotText() {
         Task { [weak self] in
             guard let self else { return }
@@ -46,7 +44,6 @@ final class ActionRouter: ActionRouting {
                     content: views.translateView(initialText: text)
                 )
             } catch ScreenshotTextError.cancelled {
-                // Пользователь сам отменил выбор области — это не ошибка.
             } catch {
                 alerts.present(title: "Снимок экрана", message: error.localizedDescription)
             }

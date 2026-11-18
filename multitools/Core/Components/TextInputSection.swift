@@ -10,8 +10,9 @@ private enum InputBarLayout {
     static let iconScaleTransition: CGFloat = 0.7
     static let submitIcon = "arrow.right"
 
+    static let approximateLineHeight: CGFloat = 20
     static let minLines = 1
-    static let maxLines = 6
+    static let maxLines = 10
 
     static let stateAnimation: Animation = .easeInOut(duration: 0.2)
     static let swapTransition: AnyTransition =
@@ -28,24 +29,46 @@ struct TextInputSection: View {
 
     @FocusState private var isFocused: Bool
 
+    @State private var fieldHeight: CGFloat = 0
+
     private var canSubmit: Bool {
         !isLoading && !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    private var visibleHeight: CGFloat {
+        let minimum = CGFloat(InputBarLayout.minLines) * InputBarLayout.approximateLineHeight
+        let maximum = CGFloat(InputBarLayout.maxLines) * InputBarLayout.approximateLineHeight
+        return min(max(fieldHeight, minimum), maximum)
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: InputBarLayout.horizontalSpacing) {
-            TextField(placeholder, text: $text, axis: .vertical)
-                .textFieldStyle(.plain)
-                .lineLimit(InputBarLayout.minLines...InputBarLayout.maxLines)
-                .font(.system(size: PanelTokens.bodyFontSize))
-                .padding(.vertical, InputBarLayout.verticalTextPadding)
-                .focused($isFocused)
-                .onKeyPress(keys: [.return]) { press in
-                    // Enter отправляет, Shift+Enter оставляет перенос строки.
-                    guard !press.modifiers.contains(.shift) else { return .ignored }
-                    handleSubmit()
-                    return .handled
-                }
+            ScrollView(.vertical) {
+                TextField(placeholder, text: $text, axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: PanelTokens.bodyFontSize))
+                    .padding(.vertical, InputBarLayout.verticalTextPadding)
+                    .focused($isFocused)
+                    .onKeyPress(keys: [.return]) { press in
+                        guard !press.modifiers.contains(.shift) else { return .ignored }
+                        handleSubmit()
+                        return .handled
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(
+                                key: InputFieldHeightKey.self,
+                                value: proxy.size.height
+                            )
+                        }
+                    )
+            }
+            .frame(height: visibleHeight)
+            .scrollDisabled(fieldHeight <= visibleHeight)
+            .onPreferenceChange(InputFieldHeightKey.self) { height in
+                fieldHeight = height
+            }
 
             submitButton
         }
@@ -87,5 +110,13 @@ struct TextInputSection: View {
     private func handleSubmit() {
         guard canSubmit else { return }
         onSubmit()
+    }
+}
+
+private struct InputFieldHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
